@@ -9,16 +9,17 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private var yesButton: UIButton!
     @IBOutlet private var noButton: UIButton!
     
-    //structs were here
     
     private let questionsAmount: Int = 10
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     
-    //questions were here
     
     private var currentQuestionIndex = 0
     private var correctAnswers = 0
+    
+    private var alertPresenter: AlertPresenter?
+    
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -27,6 +28,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
 //        questionFactory.delegate = self
         questionFactory = QuestionFactory(delegate: self)
+        alertPresenter = AlertPresenterImplementation(viewController: self)
         
         questionFactory?.requestNextQuestion()
         
@@ -84,7 +86,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func showNextQuestionOrResults() {
-//      if currentQuestionIndex == questions.count - 1 {
+        
         if currentQuestionIndex == questionsAmount - 1 {
             let text = correctAnswers == questionsAmount ?
                     "Поздравляем, вы ответили на 10 из 10!" :
@@ -92,31 +94,33 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             
             let result = QuizResultsViewModel(title: "Этот раунд окончен", text: text, buttonText: "Сыграть еще раз")
             
-            show(quiz: result)
+            showFinalResult(quiz: result)
       } else {
           currentQuestionIndex += 1
           
           questionFactory?.requestNextQuestion()
           
       }
+        
     }
     
-    private func show(quiz result: QuizResultsViewModel) {
-        let alert = UIAlertController(
+    private func showFinalResult(quiz result: QuizResultsViewModel) {
+        //Alert presenter
+        
+        let alertModel = AlertModel(
             title: result.title,
             message: result.text,
-            preferredStyle: .alert)
+            buttonText: result.buttonText,
+            completion: { [weak self] in
+                self?.currentQuestionIndex = 0
+                self?.correctAnswers = 0
+                
+                self?.questionFactory?.requestNextQuestion()
+            }
+        )
         
-        let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
-            guard let self = self else { return }
-            self.currentQuestionIndex = 0
-            self.correctAnswers = 0
-            
-            questionFactory?.requestNextQuestion()
-            
-        }
-        alert.addAction(action)
-        self.present(alert, animated: true, completion: nil)
+        alertPresenter?.show(alertModel: alertModel)
+        
     }
     
     // MARK: - Actions
