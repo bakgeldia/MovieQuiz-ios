@@ -27,11 +27,8 @@ extension AlertPresenterImplementation: AlertPresenter {
             message: alertModel.message,
             preferredStyle: .alert)
         
-        let action = UIAlertAction(title: alertModel.buttonText, style: .default) { [weak self] _ in
-            guard let self = self else { return }
-            
+        let action = UIAlertAction(title: alertModel.buttonText, style: .default) { _ in
             alertModel.completion()
-            
         }
         
         alert.addAction(action)
@@ -39,3 +36,4 @@ extension AlertPresenterImplementation: AlertPresenter {
         viewController?.present(alert, animated: true)
     }
 }
+

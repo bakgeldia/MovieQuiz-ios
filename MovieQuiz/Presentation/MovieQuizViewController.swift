@@ -14,21 +14,24 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     
-    
     private var currentQuestionIndex = 0
     private var correctAnswers = 0
     
     private var alertPresenter: AlertPresenter?
-    
+    private var statisticService: StatisticService?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
-//        questionFactory.delegate = self
+        //print(NSHomeDirectory())
+        //UserDefaults.standard.set(true, forKey: "viewDidLoad")
+        //print(Bundle.main.bundlePath)
+        
         questionFactory = QuestionFactory(delegate: self)
         alertPresenter = AlertPresenterImplementation(viewController: self)
+        statisticService = StatisticServiceImplementation()
         
         questionFactory?.requestNextQuestion()
         
@@ -67,6 +70,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         counterLabel.text = step.questionNumber
     }
     
+    //function that checks if the answer is true. If it is correct, then the border of the movie poster should be green, otherwise red.
     private func showAnswerResult(isCorrect: Bool) {
         
         if isCorrect {
@@ -85,12 +89,21 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         noButton.isEnabled = false
     }
     
+    //function to check if the quiz is finished. If so, send result into showFinalResult() function. Otherwise, increase currentQuestionIndex and send it to
     private func showNextQuestionOrResults() {
+        guard let statisticService = statisticService,
+              let bestGame = statisticService.bestGame else { return }
+        
+        let currentGameResult = "Ваш результат: \(correctAnswers)/\(questionsAmount)"
+        let totalPlayedCounter = "Количество сыгранных квизов: \(statisticService.gamesCount)"
+        let personalRecord = "Рекорд: \(bestGame.correct)/\(bestGame.total)" + "(\(bestGame.date.dateTimeString))"
+        let avgAccuracy = "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
         
         if currentQuestionIndex == questionsAmount - 1 {
-            let text = correctAnswers == questionsAmount ?
-                    "Поздравляем, вы ответили на 10 из 10!" :
-                    "Вы ответили на \(correctAnswers) из 10, попробуйте ещё раз!"
+//            let text = correctAnswers == questionsAmount ?
+//                    "Поздравляем, вы ответили на 10 из 10!" :
+//                    "Вы ответили на \(correctAnswers) из 10, попробуйте ещё раз!"
+            let text = "\(currentGameResult)\n\(totalPlayedCounter)\n\(personalRecord)\n\(avgAccuracy)"
             
             let result = QuizResultsViewModel(title: "Этот раунд окончен", text: text, buttonText: "Сыграть еще раз")
             
@@ -105,8 +118,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func showFinalResult(quiz result: QuizResultsViewModel) {
-        //Alert presenter
+        statisticService?.store(correct: correctAnswers, total: questionsAmount)
         
+        //Alert presenter
         let alertModel = AlertModel(
             title: result.title,
             message: result.text,
