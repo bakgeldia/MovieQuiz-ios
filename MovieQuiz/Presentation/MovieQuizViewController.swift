@@ -157,6 +157,20 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
 }
 
+//extension MovieQuizViewController: QuestionFactoryDelegate {
+//    func didReceiveNextQuestion(question: QuizQuestion?) {
+//        guard let question = question else {
+//            return
+//        }
+//
+//        currentQuestion = question
+//        let viewModel = convert(model: question)
+//        DispatchQueue.main.async { [weak self] in
+//            self?.show(quiz: viewModel)
+//        }
+//    }
+//}
+
 
 /*
  Mock-данные
