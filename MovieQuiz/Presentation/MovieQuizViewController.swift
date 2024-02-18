@@ -25,10 +25,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
         super.viewDidLoad()
         
-        //print(NSHomeDirectory())
-        //UserDefaults.standard.set(true, forKey: "viewDidLoad")
-        //print(Bundle.main.bundlePath)
-        
         questionFactory = QuestionFactory(delegate: self)
         alertPresenter = AlertPresenterImplementation(viewController: self)
         statisticService = StatisticServiceImplementation()
@@ -100,9 +96,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         let avgAccuracy = "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
         
         if currentQuestionIndex == questionsAmount - 1 {
-//            let text = correctAnswers == questionsAmount ?
-//                    "Поздравляем, вы ответили на 10 из 10!" :
-//                    "Вы ответили на \(correctAnswers) из 10, попробуйте ещё раз!"
+            
             let text = "\(currentGameResult)\n\(totalPlayedCounter)\n\(personalRecord)\n\(avgAccuracy)"
             
             let result = QuizResultsViewModel(title: "Этот раунд окончен", text: text, buttonText: "Сыграть еще раз")
@@ -139,7 +133,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     // MARK: - Actions
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        //let currentQuestion = questions[currentQuestionIndex]
         
         guard let currentQuestion = currentQuestion else {
             return
@@ -152,7 +145,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     
     @IBAction private func noButtonClicked(_ sender: UIButton) {
-        //let currentQuestion = questions[currentQuestionIndex]
         
         guard let currentQuestion = currentQuestion else {
             return
