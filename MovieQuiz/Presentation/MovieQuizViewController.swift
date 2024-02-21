@@ -106,7 +106,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
           currentQuestionIndex += 1
           
           questionFactory?.requestNextQuestion()
-          
       }
         
     }
