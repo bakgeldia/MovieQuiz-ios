@@ -9,7 +9,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private var yesButton: UIButton!
     @IBOutlet private var noButton: UIButton!
     
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     private let questionsAmount: Int = 10
     private var questionFactory: QuestionFactoryProtocol?
@@ -41,7 +41,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         guard let question = question else {
             return
         }
-
+        
         currentQuestion = question
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
@@ -61,6 +61,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func show(quiz step: QuizStepViewModel) {
+        
+        hideLoadingIndicator() //before next question is appeared, the loading indicator is hidden
+        
         imageView.layer.borderWidth = 0
         yesButton.isEnabled = true
         noButton.isEnabled = true
@@ -87,6 +90,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
         yesButton.isEnabled = false
         noButton.isEnabled = false
+        showLoadingIndicator() //while next question is loading, the loading indicator is shown
     }
     
     //function to check if the quiz is finished. If so, send result into showFinalResult() function. Otherwise, increase currentQuestionIndex and send it to
@@ -200,20 +204,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
 }
-
-//extension MovieQuizViewController: QuestionFactoryDelegate {
-//    func didReceiveNextQuestion(question: QuizQuestion?) {
-//        guard let question = question else {
-//            return
-//        }
-//
-//        currentQuestion = question
-//        let viewModel = convert(model: question)
-//        DispatchQueue.main.async { [weak self] in
-//            self?.show(quiz: viewModel)
-//        }
-//    }
-//}
 
 
 /*
