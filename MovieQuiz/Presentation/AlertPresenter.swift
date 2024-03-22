@@ -20,6 +20,7 @@ final class AlertPresenterImplementation {
     }
 }
 
+// MARK: - AlertPresenter
 extension AlertPresenterImplementation: AlertPresenter {
     func show(alertModel: AlertModel) {
         let alert = UIAlertController(
