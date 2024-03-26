@@ -25,6 +25,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
         super.viewDidLoad()
         
+        presenter.viewController = self
+        
         imageView.layer.cornerRadius = 20
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         alertPresenter = AlertPresenterImplementation(viewController: self)
@@ -63,7 +65,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     //function that checks if the answer is true. If it is correct, then the border of the movie poster should be green, otherwise red.
-    private func showAnswerResult(isCorrect: Bool) {
+    func showAnswerResult(isCorrect: Bool) {
         
         if isCorrect {
             correctAnswers += 1
@@ -171,25 +173,17 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // MARK: - Actions
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
         
-        guard let currentQuestion = currentQuestion else {
-            return
-        }
+        presenter.currentQuestion = currentQuestion
+        presenter.yesButtonClicked()
         
-        let givenAnswer = true
-        
-        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
     
     
     @IBAction private func noButtonClicked(_ sender: UIButton) {
         
-        guard let currentQuestion = currentQuestion else {
-            return
-        }
+        presenter.currentQuestion = currentQuestion
+        presenter.noButtonClicked()
         
-        let givenAnswer = false
-        
-        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
     
 }
