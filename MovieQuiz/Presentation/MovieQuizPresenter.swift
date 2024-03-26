@@ -12,10 +12,10 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     private let statisticService: StatisticService!
     private weak var viewController: MovieQuizViewController?
     private var questionFactory: QuestionFactoryProtocol?
-    var currentQuestion: QuizQuestion?
     
-    var correctAnswers: Int = 0
-    let questionsAmount: Int = 10
+    private var currentQuestion: QuizQuestion?
+    private var correctAnswers: Int = 0
+    private let questionsAmount: Int = 10
     private var currentQuestionIndex: Int = 0
     
     init(viewController: MovieQuizViewController) {
@@ -27,6 +27,8 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         questionFactory?.loadData()
         viewController.showLoadingIndicator()
     }
+    
+    // MARK: - QuestionFactoryDelegate
     
     func didLoadDataFromServer() {
         viewController?.hideLoadingIndicator()
@@ -65,6 +67,12 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         currentQuestionIndex += 1
     }
     
+    func didAnswer(isCorrectAnswer: Bool) {
+        if (isCorrectAnswer) {
+            correctAnswers += 1
+        }
+    }
+    
     func convert(model: QuizQuestion) -> QuizStepViewModel {
         
         let newModel = QuizStepViewModel(
@@ -93,7 +101,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         proceedWithAnswer(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
     
-    func proceedToNextQuestionOrResults() {
+    private func proceedToNextQuestionOrResults() {
         guard let statisticService = statisticService,
         let bestGame = statisticService.bestGame else { return }
         
@@ -119,14 +127,9 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
             questionFactory?.requestNextQuestion()
         }
     }
+
     
-    func didAnswer(isCorrectAnswer: Bool) {
-        if (isCorrectAnswer) {
-            correctAnswers += 1
-        }
-    }
-    
-    func proceedWithAnswer(isCorrect: Bool) {
+    private func proceedWithAnswer(isCorrect: Bool) {
         
         didAnswer(isCorrectAnswer: isCorrect)
         

@@ -41,25 +41,6 @@ final class MovieQuizViewController: UIViewController {
         counterLabel.text = step.questionNumber
     }
     
-    //function that checks if the answer is true. If it is correct, then the border of the movie poster should be green, otherwise red.
-//    func showAnswerResult(isCorrect: Bool) {
-//        
-//        presenter.didAnswer(isCorrectAnswer: isCorrect)
-//        
-//        imageView.layer.masksToBounds = true
-//        imageView.layer.borderWidth = 8
-//        imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
-//        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-//            guard let self = self else { return }
-//            self.presenter.showNextQuestionOrResults()
-//        }
-//        
-//        yesButton.isEnabled = false
-//        noButton.isEnabled = false
-//        showLoadingIndicator() //while next question is loading, the loading indicator is shown
-//    }
-    
     func highlightImageBorder(isCorrectAnswer: Bool) {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
@@ -69,29 +50,6 @@ final class MovieQuizViewController: UIViewController {
         noButton.isEnabled = false
         showLoadingIndicator() //while next question is loading, the loading indicator is shown
     }
-    
-    //function to check if the quiz is finished. If so, send result into showFinalResult() function. Otherwise, increase currentQuestionIndex and send it to
-//    private func showNextQuestionOrResults() {
-//        guard let statisticService = statisticService,
-//              let bestGame = statisticService.bestGame else { return }
-//        
-//        let currentGameResult = "Ваш результат: \(presenter.correctAnswers)/\(presenter.questionsAmount)"
-//        let totalPlayedCounter = "Количество сыгранных квизов: \(statisticService.gamesCount)"
-//        let personalRecord = "Рекорд: \(bestGame.correct)/\(bestGame.total)" + "(\(bestGame.date.dateTimeString))"
-//        let avgAccuracy = "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
-//        
-//        if presenter.isLastQuestion() {
-//            
-//            let text = "\(currentGameResult)\n\(totalPlayedCounter)\n\(personalRecord)\n\(avgAccuracy)"
-//            
-//            let result = QuizResultsViewModel(title: "Этот раунд окончен", text: text, buttonText: "Сыграть еще раз")
-//            
-//            showFinalResult(quiz: result)
-//      } else {
-//          presenter.switchToNextQuestion()
-//      }
-//        
-//    }
     
     func showFinalResult(quiz result: QuizResultsViewModel) {
         
@@ -122,7 +80,7 @@ final class MovieQuizViewController: UIViewController {
     func showNetworkError(message: String) {
         hideLoadingIndicator() // скрываем индикатор загрузки
         
-        // создайте и покажите алерт
+        // создание и показ алерта
         let alertModel = AlertModel(
             title: "Ошибка",
             message: message,
