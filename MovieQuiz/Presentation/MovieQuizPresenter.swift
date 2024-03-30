@@ -9,7 +9,7 @@ import UIKit
 
 final class MovieQuizPresenter: QuestionFactoryDelegate {
     
-    private let statisticService: StatisticService!
+    private let statisticService: StatisticService?
     private weak var viewController: MovieQuizViewController?
     private var questionFactory: QuestionFactoryProtocol?
     
@@ -112,14 +112,18 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         
         if self.isLastQuestion() {
             
-            let text = "\(currentGameResult)\n\(totalPlayedCounter)\n\(personalRecord)\n\(avgAccuracy)"
+            let text: String
+            
+            if statisticService.gamesCount != 0 {
+                text = "\(currentGameResult)\n\(totalPlayedCounter)\n\(personalRecord)\n\(avgAccuracy)"
+            } else { text = "\(currentGameResult)" }
             
             let result = QuizResultsViewModel(
                 title: "Этот раунд окончен",
                 text: text,
                 buttonText: "Сыграть еще раз"
             )
-            
+            statisticService.store(correct: correctAnswers, total: questionsAmount)
             viewController?.showFinalResult(quiz: result)
             
         } else {

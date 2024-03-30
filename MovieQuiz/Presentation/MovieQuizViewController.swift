@@ -12,7 +12,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     private var alertPresenter: AlertPresenter?
-    private var presenter: MovieQuizPresenter!
+    private var presenter: MovieQuizPresenter?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -52,14 +52,13 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     }
     
     func showFinalResult(quiz result: QuizResultsViewModel) {
-        
         //Alert presenter
         let alertModel = AlertModel(
             title: result.title,
             message: result.text,
             buttonText: result.buttonText,
             completion: { [weak self] in
-                self?.presenter.restartGame()
+                self?.presenter?.restartGame()
             }
         )
         
@@ -88,7 +87,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
             completion: { [weak self] in
                 guard let self = self else { return }
                 
-                self.presenter.restartGame()
+                self.presenter?.restartGame()
             }
         )
         
@@ -98,12 +97,12 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     
     // MARK: - Actions
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        presenter.yesButtonClicked()
+        presenter?.yesButtonClicked()
     }
     
     
     @IBAction private func noButtonClicked(_ sender: UIButton) {
-        presenter.noButtonClicked()
+        presenter?.noButtonClicked()
     }
     
 }

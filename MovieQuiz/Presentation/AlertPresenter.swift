@@ -39,6 +39,3 @@ extension AlertPresenterImplementation: AlertPresenter {
         viewController?.present(alert, animated: true)
     }
 }
-
-
-//alert.view.accessibilityIdentifier = "Game results"

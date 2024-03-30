@@ -43,5 +43,3 @@ struct MoviesLoader: MoviesLoading {
         }
     }
 }
-
-//https://tv-api.com/en/API/Top250Movies/k_zcuw1ytf
