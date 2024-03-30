@@ -7,7 +7,7 @@
 
 import Foundation
 
-class QuestionFactory: QuestionFactoryProtocol {
+final class QuestionFactory: QuestionFactoryProtocol {
     
     private let moviesLoader: MoviesLoading
     private weak var delegate: QuestionFactoryDelegate?
@@ -55,7 +55,7 @@ class QuestionFactory: QuestionFactoryProtocol {
             let randomInd = Int.random(in: 0...1)
             
             let text = randomInd == 0 ? "Рейтинг этого фильма больше чем \(randomInt)?" : "Рейтинг этого фильма меньше чем \(randomInt)?"
-            let correctAnswer = rating > Float(randomInt)
+            let correctAnswer = randomInd == 0 ? rating > Float(randomInt) : rating < Float(randomInt)
             
             let question = QuizQuestion(image: imageData,
                                         text: text,
